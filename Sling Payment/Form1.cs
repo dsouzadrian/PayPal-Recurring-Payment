@@ -158,7 +158,7 @@ namespace Sling_Payment
                     RadioButton rdBt = new RadioButton();
                     rdBt.Text = sourceObj.PaymentSourceName.Text;
                     //invisibleLabel.Visible = true;
-                    rdBt.Location = new Point(invisibleLabel.Location.X, invisibleLabel.Location.Y + ((i+1)*30));
+                    rdBt.Location = new Point(button1.Location.X, button1.Location.Y + ((i+1)*30));
                     rdBt.Visible = true;
                     rdBt.AutoSize = true;
                     rdBt.AutoEllipsis = false;
