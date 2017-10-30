@@ -14,6 +14,8 @@ using OpenQA.Selenium.Support.UI;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading;
+using System.IO;
+
 
 namespace Sling_Payment
 {
@@ -27,45 +29,106 @@ namespace Sling_Payment
         static IWebDriver driver;
         static Process chromeWin;
         static List<paymentSource> paySourceList = new List<paymentSource>();
+        static string logFilePath = "C:\\Users\\"+ Environment.UserName +"\\Documents\\paypalRecurringLogFile.txt";
+        static int appMode;
 
-        public Form1()
+
+        public Form1(int mode, string pathToDriver="", string hideChromeWind="true")
         {
-            InitializeComponent();
-
-            if (!InitializeChromeDriver())
+            appMode = mode;
+            File.WriteAllText(logFilePath, contents: Environment.NewLine + "APPMODE = " + appMode + Environment.NewLine + "Initializing Components: Running Paypal Recurring payment on " + DateTime.Today.ToLongDateString() + " at " + DateTime.Now.ToLongTimeString());
+            if (mode == 0)
             {
-                MessageBox.Show("Something went wrong when initializing Chrome Driver.");
-                Application.Exit();
-            }
+                InitializeComponent();
 
-            hideChromeWin();
+                
+
+                if (!InitializeChromeDriver(""))
+                {
+
+                    File.AppendAllText(logFilePath, Environment.NewLine + "Something went wrong when initializing the chromeDriver. Please verify that the chromeDriver executable exists in your directory.");
+                    //MessageBox.Show("Something went wrong when initializing Chrome Driver.");
+                    Application.Exit();
+                }
+                checkPreviousPreferences();
+                if (hideChromeWind.Equals("true"))
+                {
+                    hideChromeWin();
+                }
+            }
+            else
+            {
+                if (!InitializeChromeDriver(pathToDriver))
+                {
+
+                    File.AppendAllText(logFilePath, Environment.NewLine + "\n Something went wrong when initializing the chromeDriver. Please verify that the chromeDriver executable exists in your directory.");
+                    //MessageBox.Show("Something went wrong when initializing Chrome Driver.");
+                    Application.Exit();
+                }
+                if (hideChromeWind.Equals("true"))
+                {
+                    hideChromeWin();
+                }
+                getPaymentSources();
+                sendPayment();
+                driver.Dispose();
+                driver.Close();
+                //Checking syncing process. .... 123
+                Application.Exit();
+
+            }
             
+
+        }
+
+        public void checkPreviousPreferences()
+        {
+            paypalUsername.Text = Properties.Settings.Default.username;
+            paypalPwd.Text = Properties.Settings.Default.password;
+            sendUser.Text = Properties.Settings.Default.payToUsername;
+            amountTxtBox.Text = Properties.Settings.Default.Amount.ToString();
+
+
         }
 
 
-        public bool InitializeChromeDriver()
+        public bool InitializeChromeDriver(string pathToDriver)
         {
-            var options = new ChromeOptions();
-            options.AddUserProfilePreference("download.default_directory", "C:\\Temp");
-            options.AddUserProfilePreference("intl.accept_languages", "nl");
-            options.AddUserProfilePreference("download.prompt_for_download", "false");
-            options.AddUserProfilePreference("safebrowsing.enabled", "true");
-            options.AddUserProfilePreference("credentials_enable_service", false);
-            options.AddUserProfilePreference("profile.password_manager_enabled", false);
-            //options.AddArgument("--no-startup-window");
-            options.AddArguments("test-type");
-            options.AddArguments("--disable-extensions");
-
-            var chDrService = ChromeDriverService.CreateDefaultService(Environment.CurrentDirectory);
-            chDrService.HideCommandPromptWindow = true;
+            File.AppendAllText(logFilePath, Environment.NewLine + "Initialize ChromeDriver - Begin()");
+            
             try
             {
-                driver = new ChromeDriver(chDrService, options);
+                var options = new ChromeOptions();
+                options.AddUserProfilePreference("download.default_directory", "C:\\Temp");
+                options.AddUserProfilePreference("intl.accept_languages", "nl");
+                options.AddUserProfilePreference("download.prompt_for_download", "false");
+                options.AddUserProfilePreference("safebrowsing.enabled", "true");
+                options.AddUserProfilePreference("credentials_enable_service", false);
+                options.AddUserProfilePreference("profile.password_manager_enabled", false);
+                //options.AddArgument("--no-startup-window");
+                options.AddArguments("test-type");
+                options.AddArguments("--disable-extensions");
+
+                if (pathToDriver == "")
+                {
+                    var chDrService = ChromeDriverService.CreateDefaultService(Environment.CurrentDirectory);
+                    chDrService.HideCommandPromptWindow = true;
+                    driver = new ChromeDriver(chDrService, options);
+                }
+                else
+                {
+                    var chDrService = ChromeDriverService.CreateDefaultService(pathToDriver);
+                    chDrService.HideCommandPromptWindow = true;
+                    driver = new ChromeDriver(chDrService, options);
+                }
+                
             }
-            catch
+            catch(Exception ex)
             {
+                File.AppendAllText(logFilePath, Environment.NewLine + "Initialize ChromeDriver - There was an exception " + ex.ToString());
                 return false;
             }
+            File.AppendAllText(logFilePath, Environment.NewLine + "Initialize ChromeDriver - End()");
             return true;
         }
 
@@ -96,44 +159,24 @@ namespace Sling_Payment
             if (timeElapsed.Elapsed > TimeSpan.FromMinutes(1))
             {
                 timeElapsed.Stop();
-                Console.WriteLine("Unable to locate Chrome Window");
+                File.AppendAllText(logFilePath, "\nUnable to locate chrome window");
             }
         }
 
-        public void navigatetoPayPal(String pwd)
+        public bool getPaymentSources()
         {
-            try
+            File.AppendAllText(logFilePath, Environment.NewLine + "GetPaymentSources() - Begin");
+            if (!loginToPayPal())
             {
-                driver.Navigate().GoToUrl("http://paypal.me/dsouzaryanv");
 
-                driver.FindElement(By.ClassName("amount-number"), 2).SendKeys("0.01");
-                driver.FindElement(By.ClassName("profile-amount-submit-button"), 2).Submit();
+                File.AppendAllText(logFilePath, Environment.NewLine + "GetPaymentSources() - Unable to login");
+                return false;
 
-                driver.FindElement(By.Id("email"), 3).SendKeys("adubhai13@gmail.com");
-                IWebElement nextBt = driver.FindElement(By.Id("btnNext"), 1);
-                if(nextBt != null)
-                {
-                    nextBt.Submit();
-                }
-                driver.FindElement(By.Id("password"), 3).SendKeys(pwd);
-
-                driver.FindElement(By.Id("btnLogin")).Submit();
-
-              
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show("Unable to log you in, please verify your password");
             }
 
             try
             {
                 //Getting the list of payment options.
-
-
-
-                //int frameCount = driver.FindElements(By.TagName("iframe")).Count;
-
                 Thread.Sleep(9000);
                 IWebElement iFrameElement =  driver.FindElement(By.Id("p2p-iframe"),60);
 
@@ -155,23 +198,22 @@ namespace Sling_Payment
                     sourceObj.RadioBt = paymentSourceRows[i].FindElement(By.TagName("input"));
                     sourceObj.PaymentSourceName = paymentSourceRows[i].FindElement(By.TagName("p"));
 
-                    RadioButton rdBt = new RadioButton();
-                    rdBt.Text = sourceObj.PaymentSourceName.Text;
-                    //invisibleLabel.Visible = true;
-                    rdBt.Location = new Point(button1.Location.X, button1.Location.Y + ((i+1)*30));
-                    rdBt.Visible = true;
-                    rdBt.AutoSize = true;
-                    rdBt.AutoEllipsis = false;
-                    paymntSourceGrpBox.Controls.Add(rdBt);
+                    if (appMode == 0)
+                    {
+                        RadioButton rdBt = new RadioButton();
+                        rdBt.Text = sourceObj.PaymentSourceName.Text;
+                        //invisibleLabel.Visible = true;
+                        rdBt.Location = new Point(GetPaySourceBT.Location.X, (GetPaySourceBT.Location.Y + 30) + ((i + 1) * 30));
+                        rdBt.Visible = true;
+                        rdBt.AutoSize = true;
+                        rdBt.AutoEllipsis = false;
+                        paymntSourceGrpBox.Controls.Add(rdBt);
+                        sourceObj.PaySourceRdBt = rdBt;
+                    }
 
-                    sourceObj.PaySourceRdBt = rdBt;
-
+                    
                     paySourceList.Add(sourceObj);
                 }
-
-
-                
-
 
                 driver.SwitchTo().DefaultContent();
 
@@ -180,47 +222,173 @@ namespace Sling_Payment
             }
             catch(Exception ex)
             {
-
+                File.AppendAllText(logFilePath, Environment.NewLine + "GetPaymentSources() - There was an issue capturing the payment sources" + ex.ToString());
+                return false;
             }
+            File.AppendAllText(logFilePath, Environment.NewLine + "GetPaymentSources() - Retrieved Payment Sources successfully - End");
+            return true;
 
 
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private bool loginToPayPal()
         {
-            navigatetoPayPal(paypalPwd.Text);
-            //driver.Close();
+            try
+            {
+                if (String.IsNullOrEmpty(Properties.Settings.Default.payToUsername))
+                {
+                    driver.Navigate().GoToUrl("http://paypal.me/" + sendUser.Text);
+                }
+                else
+                {
+                    driver.Navigate().GoToUrl("http://paypal.me/" + Properties.Settings.Default.payToUsername);
+                }
+
+                driver.FindElement(By.ClassName("amount-number"), 2).SendKeys("0.01");
+                driver.FindElement(By.ClassName("profile-amount-submit-button"), 2).Submit();
+
+                IWebElement emailElement = driver.FindElement(By.Id("email"), 3);
+                if (String.IsNullOrEmpty(Properties.Settings.Default.username))
+                {
+                    if (!String.IsNullOrEmpty(paypalUsername.Text))
+                    {
+                        emailElement.Clear();
+                        emailElement.SendKeys(paypalUsername.Text);
+                    }
+                    else
+                    {
+
+                        return false;
+                    }
+                }
+                else
+                {
+                    emailElement.Clear();
+                    emailElement.SendKeys(Properties.Settings.Default.username);
+                }
+                IWebElement nextBt = driver.FindElement(By.Id("btnNext"), 1);
+                if (nextBt != null)
+                {
+                    nextBt.Submit();
+                }
+
+                if (String.IsNullOrEmpty(Properties.Settings.Default.password))
+                {
+                    if (!String.IsNullOrEmpty(paypalPwd.Text))
+                    {
+                        driver.FindElement(By.Id("password"), 3).SendKeys(paypalPwd.Text);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    driver.FindElement(By.Id("password"), 3).SendKeys(Properties.Settings.Default.password);
+                }
+
+                driver.FindElement(By.Id("btnLogin")).Submit();
+
+
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllText(logFilePath, "\nThere was an error logging in \n " + ex.ToString());
+                return false;
+            }
+            File.AppendAllText(logFilePath, "\nLogged in Successfully.");
+            return true;
         }
 
         private void sendPayment()
         {
+            File.AppendAllText(logFilePath, Environment.NewLine + "SendPayment() - Begin");
             IWebElement iFrameElement = driver.FindElement(By.Id("p2p-iframe"), 60);
 
             driver.SwitchTo().Frame(iFrameElement);
 
             for(int i=0; i<paySourceList.Count;i++)
             {
-                if(paySourceList[i].PaySourceRdBt.Checked)
+                if(i == Properties.Settings.Default.paymentSourceIndex && paySourceList[i].PaymentSourceName.Text.Equals(Properties.Settings.Default.paymentSourceName))
                 {
-                    paySourceList[i].RadioBt.Click();
+                    try
+                    {
+                        File.AppendAllText(logFilePath, Environment.NewLine + "SendPayment() - Payment Source matched - Sending Payment");
+                        IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+
+                        paySourceList[i].RadioBt.Click();
+                        IWebElement nextBt =  driver.FindElement(By.ClassName("nextButton_zl4iei"));
+                        js.ExecuteScript("window.scrollTo(0,"+ (nextBt.Location.Y - 200 ) + ")");
+                        nextBt.Click();
+
+                        IWebElement submitBt = driver.FindElement(By.ClassName("submitButton_1sxl9gz"), 5);
+                        js.ExecuteScript("window.scrollTo(0," + (submitBt.Location.Y - 200) + ")");
+                        submitBt.Click();
+                        File.AppendAllText(logFilePath, Environment.NewLine + "SendPayment() - Payment Source matched - Payment Successful");
+                        
+                        
+                    }
+                    catch(Exception ex)
+                    {
+                        File.AppendAllText(logFilePath, Environment.NewLine + "SendPayment() - Payment Source Matched but payment failed " + ex.ToString());
+                    }
                 }
+
             }
 
-            driver.FindElement(By.ClassName("nextButton_zl4iei")).Click();
-            driver.FindElement(By.ClassName("submitButton_1sxl9gz"),5).Click();
+            
+            //File.AppendAllText(logFilePath, Environment.NewLine + "SendPayment() - no payment sources matched - sending payment failed.");
 
-            driver.SwitchTo().DefaultContent();
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void savePref_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.username = paypalUsername.Text;
+            Properties.Settings.Default.password = paypalPwd.Text;
+            Properties.Settings.Default.payToUsername = sendUser.Text;
+            Properties.Settings.Default.Amount = Convert.ToDouble(amountTxtBox.Text);
+
+            for (int i = 0; i < paySourceList.Count; i++)
+            {
+                if (paySourceList[i].PaySourceRdBt.Checked)
+                {
+                    IWebElement iFrameElement = driver.FindElement(By.Id("p2p-iframe"), 60);
+
+                    driver.SwitchTo().Frame(iFrameElement);
+
+                    Properties.Settings.Default.paymentSourceIndex = i;
+                    Properties.Settings.Default.paymentSourceName = paySourceList[i].PaymentSourceName.Text;
+                }
+
+            }
+
+            Properties.Settings.Default.Save();
+            MessageBox.Show("Preferences Saved!!");
+
+        }
+
+        private void GetPaySourceBT_Click(object sender, EventArgs e)
+        {
+            getPaymentSources();
+            
+
+           
+        }
+
+        private void OnApplicationExit(object sender, EventArgs e)
+        {
+            driver.Close();
+            Application.Exit();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
 
+            driver.Close();
+            
         }
     }
 }

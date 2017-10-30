@@ -12,11 +12,18 @@ namespace Sling_Payment
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            if (args.Count() > 0)
+            {
+                Application.Run(new Form1(Int32.Parse(args[0]), args[1], args[2]));
+            }
+            else
+            {
+                Application.Run(new Form1(0, ""));
+            }
         }
     }
 }

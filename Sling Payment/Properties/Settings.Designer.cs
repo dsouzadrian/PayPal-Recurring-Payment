@@ -49,22 +49,22 @@ namespace Sling_Payment.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string paymentSource {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int paymentSourceIndex {
             get {
-                return ((string)(this["paymentSource"]));
+                return ((int)(this["paymentSourceIndex"]));
             }
             set {
-                this["paymentSource"] = value;
+                this["paymentSourceIndex"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Amount {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double Amount {
             get {
-                return ((string)(this["Amount"]));
+                return ((double)(this["Amount"]));
             }
             set {
                 this["Amount"] = value;
@@ -86,12 +86,12 @@ namespace Sling_Payment.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string DefaultSettingsSet {
+        public string paymentSourceName {
             get {
-                return ((string)(this["DefaultSettingsSet"]));
+                return ((string)(this["paymentSourceName"]));
             }
             set {
-                this["DefaultSettingsSet"] = value;
+                this["paymentSourceName"] = value;
             }
         }
     }
