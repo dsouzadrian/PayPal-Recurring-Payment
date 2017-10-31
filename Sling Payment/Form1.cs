@@ -35,6 +35,15 @@ namespace Sling_Payment
 
         public Form1(int mode, string pathToDriver="", string hideChromeWind="true")
         {
+            /*
+             * The APPMODE will determine the mode in which the app is run.
+             * APPMODE = 0 --> configuration mode, a GUI is presented to the user to configure payment options etc for the recurring payment.
+             * APPMODE = 1 --> this is the mode the CRON job should be set up with. During this mode, no GUI is 
+             * presented to the user and the job runs in the background to log a payment
+             * 
+             * 
+             */
+             
             appMode = mode;
             File.WriteAllText(logFilePath, contents: Environment.NewLine + "APPMODE = " + appMode + Environment.NewLine + "Initializing Components: Running Paypal Recurring payment on " + DateTime.Today.ToLongDateString() + " at " + DateTime.Now.ToLongTimeString());
             if (mode == 0)
