@@ -80,7 +80,7 @@ namespace Sling_Payment
                 }
                 getPaymentSources();
                 sendPayment();
-                driver.Dispose();
+                //driver.Dispose();
                 driver.Close();
                 //Checking syncing process. .... 123
                 Application.Exit();
@@ -295,7 +295,8 @@ namespace Sling_Payment
                 }
                 else
                 {
-                    driver.FindElement(By.Id("password"), 3).SendKeys(Properties.Settings.Default.password);
+                    Thread.Sleep(3000);
+                    driver.FindElementUntilExists(By.Id("password"), 10).SendKeys(Properties.Settings.Default.password);
                 }
 
                 driver.FindElement(By.Id("btnLogin")).Submit();
@@ -304,7 +305,7 @@ namespace Sling_Payment
             }
             catch (Exception ex)
             {
-                File.AppendAllText(logFilePath, "\nThere was an error logging in \n " + ex.ToString());
+                File.AppendAllText(logFilePath, "\n There was an error logging in \n " + ex.ToString());
                 return false;
             }
             File.AppendAllText(logFilePath, "\nLogged in Successfully.");
