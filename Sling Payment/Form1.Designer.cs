@@ -42,6 +42,7 @@
             this.amountTxtBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.sendUser = new System.Windows.Forms.TextBox();
+            this.loadText = new System.Windows.Forms.Label();
             this.paymntSourceGrpBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -67,6 +68,7 @@
             // 
             // paymntSourceGrpBox
             // 
+            this.paymntSourceGrpBox.Controls.Add(this.loadText);
             this.paymntSourceGrpBox.Controls.Add(this.GetPaySourceBT);
             this.paymntSourceGrpBox.Font = new System.Drawing.Font("Segoe UI Symbol", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.paymntSourceGrpBox.Location = new System.Drawing.Point(7, 246);
@@ -78,7 +80,7 @@
             // 
             // GetPaySourceBT
             // 
-            this.GetPaySourceBT.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.GetPaySourceBT.BackColor = System.Drawing.Color.DodgerBlue;
             this.GetPaySourceBT.Font = new System.Drawing.Font("Segoe UI Symbol", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GetPaySourceBT.ForeColor = System.Drawing.SystemColors.ControlText;
             this.GetPaySourceBT.Location = new System.Drawing.Point(11, 32);
@@ -91,7 +93,7 @@
             // 
             // savePref
             // 
-            this.savePref.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.savePref.BackColor = System.Drawing.Color.DodgerBlue;
             this.savePref.Font = new System.Drawing.Font("Segoe UI Symbol", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.savePref.ForeColor = System.Drawing.SystemColors.ControlText;
             this.savePref.Location = new System.Drawing.Point(7, 518);
@@ -179,6 +181,17 @@
             this.sendUser.Size = new System.Drawing.Size(296, 20);
             this.sendUser.TabIndex = 3;
             // 
+            // loadText
+            // 
+            this.loadText.AutoSize = true;
+            this.loadText.ForeColor = System.Drawing.Color.Red;
+            this.loadText.Location = new System.Drawing.Point(6, 238);
+            this.loadText.Name = "loadText";
+            this.loadText.Size = new System.Drawing.Size(246, 25);
+            this.loadText.TabIndex = 4;
+            this.loadText.Text = "Loading Payment Sources ...";
+            this.loadText.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -194,6 +207,7 @@
             this.Text = "PayPal Recurring Payment Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.paymntSourceGrpBox.ResumeLayout(false);
+            this.paymntSourceGrpBox.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -217,6 +231,7 @@
         private System.Windows.Forms.TextBox amountTxtBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox sendUser;
+        private System.Windows.Forms.Label loadText;
     }
 }
 

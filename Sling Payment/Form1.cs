@@ -97,7 +97,8 @@ namespace Sling_Payment
             sendUser.Text = Properties.Settings.Default.payToUsername;
             amountTxtBox.Text = Properties.Settings.Default.Amount.ToString();
 
-
+            savePref.Enabled = false;
+            savePref.BackColor = Color.Gray;
         }
 
 
@@ -254,7 +255,16 @@ namespace Sling_Payment
                     driver.Navigate().GoToUrl("http://paypal.me/" + Properties.Settings.Default.payToUsername);
                 }
 
-                driver.FindElement(By.ClassName("amount-number"), 2).SendKeys("0.01");
+                if (Properties.Settings.Default.Amount > 0)
+                {
+                    driver.FindElement(By.ClassName("amount-number"), 2).SendKeys(Properties.Settings.Default.Amount.ToString());
+                }
+                else
+                {
+                    driver.FindElement(By.ClassName("amount-number"), 2).SendKeys("0.01");
+                }
+
+
                 driver.FindElement(By.ClassName("profile-amount-submit-button"), 2).Submit();
 
                 IWebElement emailElement = driver.FindElement(By.Id("email"), 3);
@@ -286,6 +296,7 @@ namespace Sling_Payment
                 {
                     if (!String.IsNullOrEmpty(paypalPwd.Text))
                     {
+                        Thread.Sleep(3000);
                         driver.FindElement(By.Id("password"), 3).SendKeys(paypalPwd.Text);
                     }
                     else
@@ -318,13 +329,19 @@ namespace Sling_Payment
             IWebElement iFrameElement = driver.FindElement(By.Id("p2p-iframe"), 60);
 
             driver.SwitchTo().Frame(iFrameElement);
+            File.AppendAllText(logFilePath, Environment.NewLine + "SendPayment() - Preferences Default payment --> " + Properties.Settings.Default.paymentSourceIndex + 
+                " : " +Properties.Settings.Default.paymentSourceName);
 
-            for(int i=0; i<paySourceList.Count;i++)
+            bool paymentMatched = false;
+
+            for (int i=0; i<paySourceList.Count;i++)
             {
-                if(i == Properties.Settings.Default.paymentSourceIndex && paySourceList[i].PaymentSourceName.Text.Equals(Properties.Settings.Default.paymentSourceName))
+                File.AppendAllText(logFilePath, Environment.NewLine + "SendPayment() - Retrieved Payment Source Name --> " + i + " : " + paySourceList[i].PaymentSourceName.Text);
+                if (i == Properties.Settings.Default.paymentSourceIndex && paySourceList[i].PaymentSourceName.Text.Equals(Properties.Settings.Default.paymentSourceName))
                 {
                     try
                     {
+                        paymentMatched = true;
                         File.AppendAllText(logFilePath, Environment.NewLine + "SendPayment() - Payment Source matched - Sending Payment");
                         IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
 
@@ -348,9 +365,10 @@ namespace Sling_Payment
 
             }
 
-            
-            //File.AppendAllText(logFilePath, Environment.NewLine + "SendPayment() - no payment sources matched - sending payment failed.");
-
+            if (!paymentMatched)
+            {
+                File.AppendAllText(logFilePath, Environment.NewLine + "SendPayment() - no payment sources matched - sending payment failed.");
+            }
 
         }
 
@@ -382,10 +400,24 @@ namespace Sling_Payment
 
         private void GetPaySourceBT_Click(object sender, EventArgs e)
         {
-            getPaymentSources();
-            
+            GetPaySourceBT.Enabled = false;
+            GetPaySourceBT.BackColor = Color.Gray;
+            loadText.Visible = true;
+            Application.DoEvents();
 
-           
+            if(!getPaymentSources())
+            {
+                loadText.Text = "There was an error retreving payment sources";
+            }
+            else
+            {
+                loadText.Visible = false;
+            }
+            GetPaySourceBT.Enabled = true;
+            GetPaySourceBT.BackColor = Color.DodgerBlue;
+            savePref.BackColor = Color.DodgerBlue;
+            savePref.Enabled = true;
+
         }
 
         private void OnApplicationExit(object sender, EventArgs e)
