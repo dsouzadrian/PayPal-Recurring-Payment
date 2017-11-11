@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{FF5C72F5-D5FC-479C-A1ED-4A8B1110ED7A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Sling_Payment</RootNamespace>
-    <AssemblyName>Sling Payment</AssemblyName>
+    <RootNamespace>Paypal_Recurring_Payment</RootNamespace>
+    <AssemblyName>Paypal_Recurring_Payment</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -38,11 +38,15 @@
     <Reference Include="ASquare.WindowsTaskScheduler, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ASquare.WindowsTaskScheduler.1.5.0.0\lib\Net45\ASquare.WindowsTaskScheduler.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.6.5.0, Culture=neutral, PublicKeyToken=c416bc1b32d97233, processorArchitecture=MSIL">
+      <HintPath>..\packages\TaskScheduler.2.6.5\lib\net452\Microsoft.Win32.TaskScheduler.dll</HintPath>
+    </Reference>
     <Reference Include="Selenium.WebDriverBackedSelenium">
       <HintPath>..\..\SlingPayment\SlingPayment\Sellennium Libraries\net40\Selenium.WebDriverBackedSelenium.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -63,18 +67,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="ConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="ConfigForm.Designer.cs">
+      <DependentUpon>ConfigForm.cs</DependentUpon>
     </Compile>
     <Compile Include="paymentSource.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebDriverExtensions.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="ConfigForm.resx">
+      <DependentUpon>ConfigForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -84,6 +88,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

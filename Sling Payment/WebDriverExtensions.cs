@@ -9,7 +9,7 @@ using OpenQA.Selenium.Support.UI;
 using System.Collections;
 using System.Collections.ObjectModel;
 
-namespace Sling_Payment
+namespace Paypal_Recurring_Payment
 {
     static class WebDriverExtensions
     {

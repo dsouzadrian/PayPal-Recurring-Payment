@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Sling_Payment.Properties {
+namespace Paypal_Recurring_Payment.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -92,6 +92,30 @@ namespace Sling_Payment.Properties {
             }
             set {
                 this["paymentSourceName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string taskName {
+            get {
+                return ((string)(this["taskName"]));
+            }
+            set {
+                this["taskName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int dayMonth {
+            get {
+                return ((int)(this["dayMonth"]));
+            }
+            set {
+                this["dayMonth"] = value;
             }
         }
     }

@@ -1,6 +1,6 @@
-﻿namespace Sling_Payment
+﻿namespace Paypal_Recurring_Payment
 {
-    partial class Form1
+    partial class configForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,10 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(configForm));
             this.label1 = new System.Windows.Forms.Label();
             this.paypalPwd = new System.Windows.Forms.TextBox();
             this.paymntSourceGrpBox = new System.Windows.Forms.GroupBox();
+            this.loadText = new System.Windows.Forms.Label();
             this.GetPaySourceBT = new System.Windows.Forms.Button();
             this.savePref = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -42,10 +43,16 @@
             this.amountTxtBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.sendUser = new System.Windows.Forms.TextBox();
-            this.loadText = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.taskNameTxtBox = new System.Windows.Forms.TextBox();
+            this.jobSchedBt = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.dayMonthTxtBox = new System.Windows.Forms.TextBox();
             this.paymntSourceGrpBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -77,6 +84,17 @@
             this.paymntSourceGrpBox.TabIndex = 3;
             this.paymntSourceGrpBox.TabStop = false;
             this.paymntSourceGrpBox.Text = "Payment Sources";
+            // 
+            // loadText
+            // 
+            this.loadText.AutoSize = true;
+            this.loadText.ForeColor = System.Drawing.Color.Red;
+            this.loadText.Location = new System.Drawing.Point(6, 238);
+            this.loadText.Name = "loadText";
+            this.loadText.Size = new System.Drawing.Size(246, 25);
+            this.loadText.TabIndex = 4;
+            this.loadText.Text = "Loading Payment Sources ...";
+            this.loadText.Visible = false;
             // 
             // GetPaySourceBT
             // 
@@ -181,29 +199,82 @@
             this.sendUser.Size = new System.Drawing.Size(296, 20);
             this.sendUser.TabIndex = 3;
             // 
-            // loadText
+            // groupBox3
             // 
-            this.loadText.AutoSize = true;
-            this.loadText.ForeColor = System.Drawing.Color.Red;
-            this.loadText.Location = new System.Drawing.Point(6, 238);
-            this.loadText.Name = "loadText";
-            this.loadText.Size = new System.Drawing.Size(246, 25);
-            this.loadText.TabIndex = 4;
-            this.loadText.Text = "Loading Payment Sources ...";
-            this.loadText.Visible = false;
+            this.groupBox3.Controls.Add(this.label6);
+            this.groupBox3.Controls.Add(this.dayMonthTxtBox);
+            this.groupBox3.Controls.Add(this.label5);
+            this.groupBox3.Controls.Add(this.taskNameTxtBox);
+            this.groupBox3.Controls.Add(this.jobSchedBt);
+            this.groupBox3.Location = new System.Drawing.Point(12, 568);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(490, 138);
+            this.groupBox3.TabIndex = 7;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Schedule Options :";
             // 
-            // Form1
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI Symbol", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(6, 16);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(118, 25);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "Task Name : ";
+            // 
+            // taskNameTxtBox
+            // 
+            this.taskNameTxtBox.Location = new System.Drawing.Point(130, 19);
+            this.taskNameTxtBox.Name = "taskNameTxtBox";
+            this.taskNameTxtBox.Size = new System.Drawing.Size(191, 20);
+            this.taskNameTxtBox.TabIndex = 9;
+            // 
+            // jobSchedBt
+            // 
+            this.jobSchedBt.BackColor = System.Drawing.Color.DodgerBlue;
+            this.jobSchedBt.Font = new System.Drawing.Font("Segoe UI Symbol", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.jobSchedBt.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.jobSchedBt.Location = new System.Drawing.Point(6, 82);
+            this.jobSchedBt.Name = "jobSchedBt";
+            this.jobSchedBt.Size = new System.Drawing.Size(478, 44);
+            this.jobSchedBt.TabIndex = 8;
+            this.jobSchedBt.Text = "Schedule Job";
+            this.jobSchedBt.UseVisualStyleBackColor = false;
+            this.jobSchedBt.Click += new System.EventHandler(this.jobSchedBt_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI Symbol", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(6, 50);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(139, 25);
+            this.label6.TabIndex = 12;
+            this.label6.Text = "Day Of Month :";
+            // 
+            // dayMonthTxtBox
+            // 
+            this.dayMonthTxtBox.Location = new System.Drawing.Point(151, 56);
+            this.dayMonthTxtBox.Name = "dayMonthTxtBox";
+            this.dayMonthTxtBox.Size = new System.Drawing.Size(191, 20);
+            this.dayMonthTxtBox.TabIndex = 11;
+            // 
+            // configForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(509, 575);
+            this.ClientSize = new System.Drawing.Size(509, 714);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.savePref);
             this.Controls.Add(this.paymntSourceGrpBox);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form1";
+            this.MaximizeBox = false;
+            this.Name = "configForm";
             this.Text = "PayPal Recurring Payment Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.paymntSourceGrpBox.ResumeLayout(false);
@@ -212,6 +283,8 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -232,6 +305,12 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox sendUser;
         private System.Windows.Forms.Label loadText;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button jobSchedBt;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox taskNameTxtBox;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox dayMonthTxtBox;
     }
 }
 

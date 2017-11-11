@@ -15,11 +15,11 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading;
 using System.IO;
+using Microsoft.Win32.TaskScheduler;
 
-
-namespace Sling_Payment
+namespace Paypal_Recurring_Payment
 {
-    public partial class Form1 : Form
+    public partial class configForm : Form
     {
         [DllImport("user32.dll")]
         private static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
@@ -29,11 +29,11 @@ namespace Sling_Payment
         static IWebDriver driver;
         static Process chromeWin;
         static List<paymentSource> paySourceList = new List<paymentSource>();
-        static string logFilePath = "C:\\Users\\"+ Environment.UserName +"\\Documents\\paypalRecurringLogFile.txt";
+        static string logFilePath = "C:\\Users\\" + Environment.UserName + "\\Documents\\paypalRecurringLogFile.txt";
         static int appMode;
 
 
-        public Form1(int mode, string pathToDriver="", string hideChromeWind="true")
+        public configForm(int mode, string pathToDriver = "", string hideChromeWind = "true")
         {
             /*
              * The APPMODE will determine the mode in which the app is run.
@@ -43,14 +43,14 @@ namespace Sling_Payment
              * 
              * 
              */
-             
+
             appMode = mode;
             File.WriteAllText(logFilePath, contents: Environment.NewLine + "APPMODE = " + appMode + Environment.NewLine + "Initializing Components: Running Paypal Recurring payment on " + DateTime.Today.ToLongDateString() + " at " + DateTime.Now.ToLongTimeString());
             if (mode == 0)
             {
                 InitializeComponent();
 
-                
+
 
                 if (!InitializeChromeDriver(""))
                 {
@@ -59,7 +59,7 @@ namespace Sling_Payment
                     //MessageBox.Show("Something went wrong when initializing Chrome Driver.");
                     Application.Exit();
                 }
-                checkPreviousPreferences();
+                CheckPreviousPreferences();
                 if (hideChromeWind.Equals("true"))
                 {
                     hideChromeWin();
@@ -86,11 +86,11 @@ namespace Sling_Payment
                 Application.Exit();
 
             }
-            
+
 
         }
 
-        public void checkPreviousPreferences()
+        public void CheckPreviousPreferences()
         {
             paypalUsername.Text = Properties.Settings.Default.username;
             paypalPwd.Text = Properties.Settings.Default.password;
@@ -105,7 +105,7 @@ namespace Sling_Payment
         public bool InitializeChromeDriver(string pathToDriver)
         {
             File.AppendAllText(logFilePath, Environment.NewLine + "Initialize ChromeDriver - Begin()");
-            
+
             try
             {
                 var options = new ChromeOptions();
@@ -131,9 +131,9 @@ namespace Sling_Payment
                     chDrService.HideCommandPromptWindow = true;
                     driver = new ChromeDriver(chDrService, options);
                 }
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 File.AppendAllText(logFilePath, Environment.NewLine + "Initialize ChromeDriver - There was an exception " + ex.ToString());
                 return false;
@@ -188,7 +188,7 @@ namespace Sling_Payment
             {
                 //Getting the list of payment options.
                 Thread.Sleep(9000);
-                IWebElement iFrameElement =  driver.FindElement(By.Id("p2p-iframe"),60);
+                IWebElement iFrameElement = driver.FindElement(By.Id("p2p-iframe"), 60);
 
                 driver.SwitchTo().Frame(iFrameElement);
 
@@ -198,7 +198,7 @@ namespace Sling_Payment
 
                 System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> paymentSourceRows = formEle.FindElements(By.TagName("li"));
 
-                
+
 
 
                 for (int i = 0; i < paymentSourceRows.Count; i++)
@@ -221,16 +221,16 @@ namespace Sling_Payment
                         sourceObj.PaySourceRdBt = rdBt;
                     }
 
-                    
+
                     paySourceList.Add(sourceObj);
                 }
 
                 driver.SwitchTo().DefaultContent();
 
 
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 File.AppendAllText(logFilePath, Environment.NewLine + "GetPaymentSources() - There was an issue capturing the payment sources" + ex.ToString());
                 return false;
@@ -329,12 +329,12 @@ namespace Sling_Payment
             IWebElement iFrameElement = driver.FindElement(By.Id("p2p-iframe"), 60);
 
             driver.SwitchTo().Frame(iFrameElement);
-            File.AppendAllText(logFilePath, Environment.NewLine + "SendPayment() - Preferences Default payment --> " + Properties.Settings.Default.paymentSourceIndex + 
-                " : " +Properties.Settings.Default.paymentSourceName);
+            File.AppendAllText(logFilePath, Environment.NewLine + "SendPayment() - Preferences Default payment --> " + Properties.Settings.Default.paymentSourceIndex +
+                " : " + Properties.Settings.Default.paymentSourceName);
 
             bool paymentMatched = false;
 
-            for (int i=0; i<paySourceList.Count;i++)
+            for (int i = 0; i < paySourceList.Count; i++)
             {
                 File.AppendAllText(logFilePath, Environment.NewLine + "SendPayment() - Retrieved Payment Source Name --> " + i + " : " + paySourceList[i].PaymentSourceName.Text);
                 if (i == Properties.Settings.Default.paymentSourceIndex && paySourceList[i].PaymentSourceName.Text.Equals(Properties.Settings.Default.paymentSourceName))
@@ -346,18 +346,18 @@ namespace Sling_Payment
                         IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
 
                         paySourceList[i].RadioBt.Click();
-                        IWebElement nextBt =  driver.FindElement(By.ClassName("nextButton_zl4iei"));
-                        js.ExecuteScript("window.scrollTo(0,"+ (nextBt.Location.Y - 200 ) + ")");
+                        IWebElement nextBt = driver.FindElement(By.ClassName("nextButton_zl4iei"));
+                        js.ExecuteScript("window.scrollTo(0," + (nextBt.Location.Y - 200) + ")");
                         nextBt.Click();
 
                         IWebElement submitBt = driver.FindElement(By.ClassName("submitButton_1sxl9gz"), 5);
                         js.ExecuteScript("window.scrollTo(0," + (submitBt.Location.Y - 200) + ")");
                         submitBt.Click();
                         File.AppendAllText(logFilePath, Environment.NewLine + "SendPayment() - Payment Source matched - Payment Successful");
-                        
-                        
+
+
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         File.AppendAllText(logFilePath, Environment.NewLine + "SendPayment() - Payment Source Matched but payment failed " + ex.ToString());
                     }
@@ -405,7 +405,7 @@ namespace Sling_Payment
             loadText.Visible = true;
             Application.DoEvents();
 
-            if(!getPaymentSources())
+            if (!getPaymentSources())
             {
                 loadText.Text = "There was an error retreving payment sources";
             }
@@ -430,7 +430,30 @@ namespace Sling_Payment
         {
 
             driver.Close();
-            
+
         }
+
+        private void jobSchedBt_Click(object sender, EventArgs e)
+        {
+            
+            using (TaskService ts = new TaskService())
+            {
+                // Create a new task definition and assign properties
+                TaskDefinition td = ts.NewTask();
+                td.RegistrationInfo.Description = "Does something";
+
+                // Create a trigger that will fire the task at this time every other day
+                td.Triggers.Add(new MonthlyTrigger(Int32.Parse(dayMonthTxtBox.Text), MonthsOfTheYear.AllMonths));
+
+                // Create an action that will launch Notepad whenever the trigger fires
+                td.Actions.Add(new ExecAction(Environment.CurrentDirectory + "\\Paypal_Recurring_Payment.exe", "1 '"+Environment.CurrentDirectory+"\\chromedriver.exe' 'false'"));
+
+                // Register the task in the root folder
+                ts.RootFolder.RegisterTaskDefinition(taskNameTxtBox.Text, td);
+            }
+        }
+
+       
     }
+
 }

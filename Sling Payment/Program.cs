@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Sling_Payment
+namespace Paypal_Recurring_Payment
 {
     static class Program
     {
@@ -18,11 +18,11 @@ namespace Sling_Payment
             Application.SetCompatibleTextRenderingDefault(false);
             if (args.Count() > 0)
             {
-                Application.Run(new Form1(Int32.Parse(args[0]), args[1], args[2]));
+                Application.Run(new configForm(Int32.Parse(args[0]), args[1], args[2]));
             }
             else
             {
-                Application.Run(new Form1(0, ""));
+                Application.Run(new configForm(0, ""));
             }
         }
     }

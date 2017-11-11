@@ -10,7 +10,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 
 
-namespace Sling_Payment
+namespace Paypal_Recurring_Payment
 {
     class paymentSource
     {
