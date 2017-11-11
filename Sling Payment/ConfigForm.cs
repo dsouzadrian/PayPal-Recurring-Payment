@@ -395,6 +395,7 @@ namespace Paypal_Recurring_Payment
 
             Properties.Settings.Default.Save();
             MessageBox.Show("Preferences Saved!!");
+            schedGrpBox.Enabled = true;
 
         }
 
@@ -440,11 +441,11 @@ namespace Paypal_Recurring_Payment
             {
                 // Create a new task definition and assign properties
                 TaskDefinition td = ts.NewTask();
-                td.RegistrationInfo.Description = "Does something";
+                td.RegistrationInfo.Description = "Paypal recurring payment";
 
                 // Create a trigger that will fire the task at this time every other day
                 td.Triggers.Add(new MonthlyTrigger(Int32.Parse(dayMonthTxtBox.Text), MonthsOfTheYear.AllMonths));
-
+                
                 // Create an action that will launch Notepad whenever the trigger fires
                 td.Actions.Add(new ExecAction(Environment.CurrentDirectory + "\\Paypal_Recurring_Payment.exe", "1 '"+Environment.CurrentDirectory+"\\chromedriver.exe' 'false'"));
 

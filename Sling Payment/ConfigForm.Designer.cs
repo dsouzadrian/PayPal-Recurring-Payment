@@ -43,16 +43,16 @@
             this.amountTxtBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.sendUser = new System.Windows.Forms.TextBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.schedGrpBox = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.dayMonthTxtBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.taskNameTxtBox = new System.Windows.Forms.TextBox();
             this.jobSchedBt = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
-            this.dayMonthTxtBox = new System.Windows.Forms.TextBox();
             this.paymntSourceGrpBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.schedGrpBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -199,19 +199,37 @@
             this.sendUser.Size = new System.Drawing.Size(296, 20);
             this.sendUser.TabIndex = 3;
             // 
-            // groupBox3
+            // schedGrpBox
             // 
-            this.groupBox3.Controls.Add(this.label6);
-            this.groupBox3.Controls.Add(this.dayMonthTxtBox);
-            this.groupBox3.Controls.Add(this.label5);
-            this.groupBox3.Controls.Add(this.taskNameTxtBox);
-            this.groupBox3.Controls.Add(this.jobSchedBt);
-            this.groupBox3.Location = new System.Drawing.Point(12, 568);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(490, 138);
-            this.groupBox3.TabIndex = 7;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Schedule Options :";
+            this.schedGrpBox.Controls.Add(this.label6);
+            this.schedGrpBox.Controls.Add(this.dayMonthTxtBox);
+            this.schedGrpBox.Controls.Add(this.label5);
+            this.schedGrpBox.Controls.Add(this.taskNameTxtBox);
+            this.schedGrpBox.Controls.Add(this.jobSchedBt);
+            this.schedGrpBox.Enabled = false;
+            this.schedGrpBox.Location = new System.Drawing.Point(12, 568);
+            this.schedGrpBox.Name = "schedGrpBox";
+            this.schedGrpBox.Size = new System.Drawing.Size(490, 138);
+            this.schedGrpBox.TabIndex = 7;
+            this.schedGrpBox.TabStop = false;
+            this.schedGrpBox.Text = "Schedule Options :";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI Symbol", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(6, 50);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(139, 25);
+            this.label6.TabIndex = 12;
+            this.label6.Text = "Day Of Month :";
+            // 
+            // dayMonthTxtBox
+            // 
+            this.dayMonthTxtBox.Location = new System.Drawing.Point(151, 56);
+            this.dayMonthTxtBox.Name = "dayMonthTxtBox";
+            this.dayMonthTxtBox.Size = new System.Drawing.Size(191, 20);
+            this.dayMonthTxtBox.TabIndex = 11;
             // 
             // label5
             // 
@@ -243,23 +261,6 @@
             this.jobSchedBt.UseVisualStyleBackColor = false;
             this.jobSchedBt.Click += new System.EventHandler(this.jobSchedBt_Click);
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI Symbol", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(6, 50);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(139, 25);
-            this.label6.TabIndex = 12;
-            this.label6.Text = "Day Of Month :";
-            // 
-            // dayMonthTxtBox
-            // 
-            this.dayMonthTxtBox.Location = new System.Drawing.Point(151, 56);
-            this.dayMonthTxtBox.Name = "dayMonthTxtBox";
-            this.dayMonthTxtBox.Size = new System.Drawing.Size(191, 20);
-            this.dayMonthTxtBox.TabIndex = 11;
-            // 
             // configForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -267,7 +268,7 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(509, 714);
-            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.schedGrpBox);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.savePref);
@@ -283,8 +284,8 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            this.schedGrpBox.ResumeLayout(false);
+            this.schedGrpBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -305,7 +306,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox sendUser;
         private System.Windows.Forms.Label loadText;
-        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox schedGrpBox;
         private System.Windows.Forms.Button jobSchedBt;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox taskNameTxtBox;
